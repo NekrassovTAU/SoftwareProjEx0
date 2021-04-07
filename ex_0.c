@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <stdbool.h>
+#include <string.h>
 
 void baseConversion();
 
@@ -16,6 +17,8 @@ int convertToDecimal(char c, int original);
 
 void convertToDesiredBase(int number, int baseDesired);
 
+void clearInputBuffer();
+
 int main()
 {
     baseConversion();
@@ -23,8 +26,8 @@ int main()
 }
 
 void baseConversion() {
-    int baseOriginal, baseDesired, number, output;
-    char c;
+    int baseOriginal, baseDesired, number = 0, output;
+    int c;
     baseOriginal = baseInput("> Please enter the numbers base:");
     if (baseOriginal < 2 || baseOriginal > 16) {
         errorMessage("> Invalid input base");
@@ -34,27 +37,41 @@ void baseConversion() {
         errorMessage("> Invalid desired base");
     }
     //number = numInput("> Please enter a number in base ", baseOriginal);
-    printf("Please enter a number in base ", baseOriginal);
+    printf("Please enter a number in base %d :", baseOriginal);
+    clearInputBuffer();
 
-    c = getchar();
-    if (c != EOF) {
-        number += convertToDecimal(c, baseOriginal);
-        c = getchar();
+    if ((c = getchar()) != EOF) {
+        printf(" \nCharacter we put is:");
+        putchar(c);
+        //number += convertToDecimal(c, baseOriginal);
     }
 
-    while (c != EOF){
-        number = (number * baseOriginal) + convertToDecimal(c, baseOriginal);
-        c = getchar();
+    while ((c = getchar()) != EOF || c != '\n'){
+        printf(" \nCharacter we put is:");
+        putchar(c);
+        if (c == '\n'){
+            printf("YEET");
+        }
+        //number = (number * baseOriginal) + convertToDecimal(c, baseOriginal);
     }
 
     // convert number to desired base
-    convertToDesiredBase(number, baseDesired);
+    //convertToDesiredBase(number, baseDesired);
 
+    exit(0);
 
 /*
     if (number != 0){
      }
      */
+}
+
+void clearInputBuffer() {
+    int c;
+    do
+    {
+        c = getchar();
+    } while (c != '\n' && c != EOF);
 }
 
 void convertToDesiredBase(int number, int baseDesired){
@@ -80,6 +97,7 @@ int convertToDecimal(char c, int baseOriginal) {
     if(num >= 0 && num < baseOriginal){
         return num;
     }
+    printf("Didn't reach here");
     errorMessage("Invalid number!");
 }
 
