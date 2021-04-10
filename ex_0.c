@@ -11,9 +11,11 @@ void errorMessage(char *string);
 
 int numInput(char *msg, int base);
 
+int con();
+
 int convertNumber(int number, int baseOriginal, int baseDesired);
 
-int convertToDecimal(char c, int original);
+int convertToDecimal(char c, int baseOriginal);
 
 void convertToDesiredBase(int number, int baseDesired);
 
@@ -26,8 +28,8 @@ int main()
 }
 
 void baseConversion() {
-    int baseOriginal, baseDesired, number = 0, output;
-    int c;
+    int baseOriginal, baseDesired, number = 0;
+    char c;
     baseOriginal = baseInput("> Please enter the numbers base:");
     if (baseOriginal < 2 || baseOriginal > 16) {
         errorMessage("> Invalid input base");
@@ -36,34 +38,24 @@ void baseConversion() {
     if (baseDesired < 2 || baseDesired > 16) {
         errorMessage("> Invalid desired base");
     }
-    //number = numInput("> Please enter a number in base ", baseOriginal);
+
     printf("Please enter a number in base %d :", baseOriginal);
     clearInputBuffer();
 
     if ((c = getchar()) != EOF) {
-        printf(" \nCharacter we put is:");
-        putchar(c);
-        //number += convertToDecimal(c, baseOriginal);
+        number += convertToDecimal(c, baseOriginal);
     }
 
-    while ((c = getchar()) != EOF || c != '\n'){
-        printf(" \nCharacter we put is:");
-        putchar(c);
-        if (c == '\n'){
-            printf("YEET");
-        }
-        //number = (number * baseOriginal) + convertToDecimal(c, baseOriginal);
+    while ((c = getchar()) != EOF && c != '\n'){
+
+        number = (number * baseOriginal) + convertToDecimal(c, baseOriginal);
     }
 
+    printf("The number is : %d \n" ,number);
     // convert number to desired base
-    //convertToDesiredBase(number, baseDesired);
+    convertToDesiredBase(number, baseDesired);
 
     exit(0);
-
-/*
-    if (number != 0){
-     }
-     */
 }
 
 void clearInputBuffer() {
@@ -76,6 +68,7 @@ void clearInputBuffer() {
 
 void convertToDesiredBase(int number, int baseDesired){
     int tmp;
+    char c;
     if (number == 0){
         printf("0");
     }
@@ -83,21 +76,30 @@ void convertToDesiredBase(int number, int baseDesired){
         tmp = number % baseDesired;
         number /= baseDesired;
         if(tmp < 10){
-            printf(tmp);
+            printf("%d ",tmp);
         }
         else{
-            printf(tmp + 'W');
+            c = tmp + 'W';
+            printf("%c ", c);
+        //    printf(tmp + 'W');
         }
     }
-
 }
 
 int convertToDecimal(char c, int baseOriginal) {
     int num = c - '0';
-    if(num >= 0 && num < baseOriginal){
-        return num;
+    if(num < 10){
+        if (num >= 0 && num < baseOriginal) {
+            return num;
+        }
     }
-    printf("Didn't reach here");
+    else {
+        num = c - 'W';
+        if(num >= 0 && num < baseOriginal){
+            return num;
+        }
+    }
+
     errorMessage("Invalid number!");
 }
 
@@ -119,3 +121,17 @@ int baseInput(char *msg) {
     scanf("%d", &tmp);
     return tmp;
 }
+
+/*
+int con(){
+    int c;
+    while ((c = getchar()) != EOF || c != '\n') {
+        printf(" \nCharacter we put is:");
+        putchar(c);
+        if (c == '\n') {
+            printf("YEET");
+        }
+    }
+    return 0;
+}
+*/
